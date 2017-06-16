@@ -1,42 +1,83 @@
-globals [WordCounter ThisLine AllWords]
+globals [
+ WordCounter
+  ;;AllWords
+  ;;SearchTerms
+]
+
+;;; Global WordCounter: Connects to the Word Counter on the Interface tab, Global ThisLine: Reads the file line one at a time and stores it temporarily (file-read-line)
+;;; Global AllWords: A list to seperate ThisLine into individual words (though haven't gotten that far, but that is what it is for), Global SearchTerms:
+
 
 
 to print-me
 
-  ;; clear and reset variables
-  set AllWords []
-  set WordCounter 0
-  set ThisLine ""
+  let ThisLine 0
+
+  ;; clears and resets variables
+ ;; let AllWords []  ;; clearing out the list, reseting the variable
+  let AllWords []
+  set WordCounter 0 ;; Setting the moniter on the interface tab to 0, resets variable
+  set ThisLine "" ;; Reset the variable
+
+  ;; MAYBE HERE OPEN THE GETSEARCHTERMS AND OPEN IT IN THE SEARCHTERMS LIST, AND WE ARE ONLY OPENING THE FILE ONE TIME WHEN THEY OPEN THE LIST
 
   ;; opening file
   file-open "An excerpt of Harry Potter.txt"
 
   ;; loading lines from the file that has the keyword "the" in it
-  while [ not file-at-end? ]
+  while [not file-at-end?] ;; Opens the file, and keeps reading each line until the end of the file
   [
-
     ;; setting variable ThisLine to the line read in
-    set ThisLine file-read-line
+    set ThisLine file-read-line ;; Just reads in the file line
+    print ThisLine
 
     ;; checking for the key word
-    if member? "the" ThisLine
-    [
-      ;; saving the line to a list and counting the line for the monitor
-      set AllWords sentence AllWords (list (list ThisLine))
-      set WordCounter (WordCounter + 1)
-    ]
-  ]
+    let SearchTerm getSearchTerm 0
+    if member? SearchTerm ThisLine ;; Check for search term in this line INSTEAD OF GETSEARCHTERMS JUST HAVE THE LIST OF SEARCHTERMS
 
+ ;;;;;;;; set SearchWord getSearchTerm 3 ;;;;;;;;
+[
+;      ;; saving the line to a list a nd counting the line for the monitor
+;      set AllWords sentence AllWords (list (list ThisLine)) ;; Attempting to seperate thisLine into a list (A way to get the surrounding words LATER in the program)
+    set WordCounter (WordCounter + 1)
+
+   ]
+  ]
   ;; closing file
   file-close
 
   ;; verify lines added to list
-  show AllWords
+  ;;  show AllWords ;; shows the list in the Command Center
 
+end
+;; code from Netlogo example: "File Input Example" and from the NetLogo Dictionary
+
+to-report getSearchTerm [x]
+  file-open "MyList.txt"
+  let mySearchWord ""
+    if not file-at-end?
+  [
+
+   set mySearchWord file-read-line
+    print mySearchWord
+    report mySearchWord
+
+  ]
+
+  print "End of File"
+  file-close
+  report mySearchWord
 
 end
 
-;; code from netlogo example File Input Example and NetLogo Dictionary
+;; pull in each word as a string and check each word to see if that is the word we are looking for
+;;we want to report expression
+
+;;to-report get Search Term [x]
+
+;;searchWord - get Search
+
+;;;; OPENING THE FILE WOULD BE RESOURCE INTENSIVE! SO MAYBE PUT IT UP IN THE CLICK-HERE PROCEDURE. AND LOAD THE LIST ONCE, BEFORE THE ACTUAL SEARCHING
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
@@ -66,9 +107,9 @@ ticks
 30.0
 
 BUTTON
-82
+83
 53
-168
+169
 86
 Click Here
 print-me
